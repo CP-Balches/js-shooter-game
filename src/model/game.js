@@ -4,6 +4,8 @@ import { Player } from "/src/model/player.js";
 import { Bullet } from "/src/model/bullet.js";
 import { Enemy } from "/src/model/enemy.js";
 import { EventPublisher } from "/src/events/event-publisher.js";
+import { Color } from "/src/data-types/color.js";
+import { Text } from "/src/hud/text.js";
 
 const enemyLimits = {
   minRadius: 10,
@@ -20,17 +22,20 @@ export class Game {
       return Game.instance;
     }
 
-    this._canvas = new Canvas();
-    this._player = new Player();
     this._bullets = [];
     this._enemies = [];
-    this._eventPublisher = new EventPublisher();
-    this._eventPublisher.addSubscriber(this);
+    EventPublisher.instance.addSubscriber(this);
     this._lastTimestamp = null;
     this._renderLoop = this._render.bind(this);
     this._isRunning = false;
     this._nextEnemySpawnTimestamp = 0;
     this._maxEnemySpawnCooldown = 3;
+    this._pauseText = new Text(
+      "PAUSED",
+      Canvas.instance.size.scalarMult(0.5),
+      100,
+      new Color(0, 0, 100),
+    );
 
     Game._instance = this;
     return this;
@@ -55,12 +60,20 @@ export class Game {
     this._bullets.push(bullet);
   }
 
-  _render(timestamp) {
-    this._canvas.clear();
-    this._update(timestamp);
-    this._renderObjects();
+  onKeyDown(event) {
+    if (event.key === " ") {
+      this._isRunning = !this.isRunning;
+      this._renderObjects();
+    }
+  }
 
-    this._lastTimestamp = timestamp;
+  _render(timestamp) {
+    if (this.isRunning) {
+      this._update(timestamp);
+      this._renderObjects();
+
+      this._lastTimestamp = timestamp;
+    }
     requestAnimationFrame(this._renderLoop);
   }
 
@@ -68,12 +81,14 @@ export class Game {
     const lastTimestamp = this._lastTimestamp ?? timestamp;
     const dt = Math.min((timestamp - lastTimestamp) / 1000, 0.033);
 
-    this._player.update(dt);
+    Player.instance.update(dt);
     this._updateBullets(dt);
     this._updateEnemies(dt);
 
     if (timestamp >= this._nextEnemySpawnTimestamp) {
       this._spawnEnemy();
+      this._nextEnemySpawnTimestamp =
+        timestamp + Math.random() * this._maxEnemySpawnCooldown * 1000;
     }
   }
 
@@ -87,11 +102,13 @@ export class Game {
   _updateEnemies(dt) {
     for (let i = 0; i < this._enemies.length; i++) {
       const enemy = this._enemies[i];
-      enemy.direction = this._player.position.sub(enemy.position).normalize();
+      enemy.direction = Player.instance.position
+        .sub(enemy.position)
+        .normalize();
       enemy.update(dt);
 
-      if (enemy.collidesWith(this._player)) {
-        this._player.health -= enemy.damage;
+      if (enemy.collidesWith(Player.instance)) {
+        Player.instance.health -= enemy.damage;
         this._enemies.splice(i, 1);
       } else {
         let j = 0;
@@ -110,13 +127,13 @@ export class Game {
   }
 
   _spawnEnemy() {
-    const minDistance = this._canvas.size.magnitude;
-    const distance = minDistance * (1 + Math.random());
+    const minDistance = Canvas.instance.size.magnitude;
+    const distance = minDistance * (1 + 0.5 * Math.random());
     const angle = Math.random() * 2 * Math.PI;
     const x = distance * Math.cos(angle);
     const y = distance * Math.sin(angle);
     const position = new Vector2(x, y);
-    const direction = this._player.position.sub(position).normalize();
+    const direction = Player.instance.position.sub(position).normalize();
     const radius =
       enemyLimits.minRadius +
       (enemyLimits.maxRadius - enemyLimits.minRadius) * Math.random();
@@ -125,7 +142,7 @@ export class Game {
       (enemyLimits.maxSpeed - enemyLimits.minSpeed) *
         ((enemyLimits.maxRadius - radius) /
           (enemyLimits.maxRadius - enemyLimits.minRadius));
-    const color = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+    const color = new Color(Math.random() * 360, 100, 50);
     const damage =
       enemyLimits.minDamage +
       (enemyLimits.maxDamage - enemyLimits.minDamage) *
@@ -133,18 +150,23 @@ export class Game {
           (enemyLimits.maxRadius - enemyLimits.minRadius));
     const enemy = new Enemy(position, direction, radius, speed, color, damage);
     this._enemies.push(enemy);
-
-    this._nextEnemySpawnTimestamp +=
-      Math.random() * this._maxEnemySpawnCooldown * 1000;
   }
 
   _renderObjects() {
-    this._player.render();
-    for (const bullet of this._bullets) {
-      bullet.render();
+    Canvas.instance.clear();
+
+    Player.instance.render();
+    this._renderList(this._bullets);
+    this._renderList(this._enemies);
+
+    if (!this.isRunning) {
+      this._pauseText.render();
     }
-    for (const enemy of this._enemies) {
-      enemy.render();
+  }
+
+  _renderList(list) {
+    for (const element of list) {
+      element.render();
     }
   }
 }

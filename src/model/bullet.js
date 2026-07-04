@@ -1,8 +1,9 @@
 import { MovableObject } from "/src/model/movable-object.js";
+import { Color } from "/src/data-types/color.js";
 
 const radius = 20;
 const speed = 5000;
-const color = "red";
+const color = new Color(0, 100, 50);
 const maxLifetime = 2;
 
 export class Bullet extends MovableObject {

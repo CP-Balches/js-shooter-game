@@ -1,23 +1,24 @@
 import { EventPublisher } from "/src/events/event-publisher.js";
 import { Vector2 } from "/src/data-types/vector-2.js";
+import { Game } from "/src/model/game.js";
+import { Color } from "/src/data-types/color.js";
 
 export class Canvas {
   constructor(size) {
-    if (Canvas.instance) {
-      return Canvas.instance;
+    if (Canvas._instance) {
+      return Canvas._instance;
     }
 
     this._createCanvas(size);
     this._context = this._canvas.getContext("2d");
-    this._eventPublisher = new EventPublisher();
-    this._eventPublisher.addSubscriber(this);
+    EventPublisher.instance.addSubscriber(this);
 
     Canvas._instance = this;
     return this;
   }
 
   static get instance() {
-    return Canvas._instance;
+    return new Canvas();
   }
 
   get size() {
@@ -46,10 +47,21 @@ export class Canvas {
   }
 
   drawCircle(position, radius, color) {
-    this._context.fillStyle = color;
+    const fillColor = Game.instance.isRunning
+      ? color
+      : new Color(color.hue, 20, color.lightness);
+    this._context.fillStyle = fillColor.toString();
     this._context.beginPath();
     this._context.arc(position.x, position.y, radius, 0, 2 * Math.PI);
     this._context.fill();
+  }
+
+  drawText(text, position, size, color) {
+    this._context.fillStyle = color.toString();
+    this._context.font = `${size}px sans-serif`;
+    this._context.textAlign = "center";
+    this._context.textBaseline = "middle";
+    this._context.fillText(text, position.x, position.y);
   }
 
   onResize() {

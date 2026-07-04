@@ -40,6 +40,11 @@ export class Vector2 {
     return new Vector2(this.x * scalar, this.y * scalar);
   }
 
+  dotProduct(other) {
+    const mult = this.mult(other);
+    return mult.x + mult.y;
+  }
+
   clamp(min, max) {
     return new Vector2(
       Math.min(Math.max(this.x, min.x), max.x),

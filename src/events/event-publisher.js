@@ -1,7 +1,7 @@
 export class EventPublisher {
   constructor() {
-    if (EventPublisher.instance) {
-      return EventPublisher.instance;
+    if (EventPublisher._instance) {
+      return EventPublisher._instance;
     }
 
     this._subscribers = new Set();
@@ -18,7 +18,7 @@ export class EventPublisher {
   }
 
   static get instance() {
-    return EventPublisher._instance;
+    return new EventPublisher();
   }
 
   get keysPressed() {

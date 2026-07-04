@@ -3,13 +3,14 @@ import { Vector2 } from "/src/data-types/vector-2.js";
 import { EventPublisher } from "/src/events/event-publisher.js";
 import { Bullet } from "/src/model/bullet.js";
 import { Canvas } from "/src/canvas/canvas.js";
+import { Color } from "/src/data-types/color.js";
+import { Game } from "/src/model/game.js";
 
-const canvas = new Canvas();
-const initialPosition = canvas.size.scalarMult(0.5);
+const initialPosition = Canvas.instance.size.scalarMult(0.5);
 const initialDirection = Vector2.zero();
 const radius = 50;
 const speed = 1000;
-const color = "red";
+const color = new Color(0, 100, 50);
 const maxHealth = 100;
 const directions = {
   w: new Vector2(0, -1),
@@ -20,21 +21,20 @@ const directions = {
 
 export class Player extends MovableObject {
   constructor() {
-    if (Player.instance) {
-      return Player.instance;
+    if (Player._instance) {
+      return Player._instance;
     }
 
     super(initialPosition, initialDirection, radius, speed, color);
     this._health = maxHealth;
-    this._eventPublisher = new EventPublisher();
-    this._eventPublisher.addSubscriber(this);
+    EventPublisher.instance.addSubscriber(this);
 
     Player._instance = this;
     return this;
   }
 
   static get instance() {
-    return Player._instance;
+    return new Player();
   }
 
   get health() {
@@ -49,14 +49,14 @@ export class Player extends MovableObject {
     super.update(dt);
 
     const radiusVector = Vector2.fromScalar(this.radius);
-    const maxPos = this._canvas.size.sub(radiusVector);
-    this.position = this.position.clamp(radiusVector, maxPos);
+    const maxPosition = Canvas.instance.size.sub(radiusVector);
+    this._position = this.position.clamp(radiusVector, maxPosition);
   }
 
   onKeyDown(event) {
     if (
       event.key in directions &&
-      !this._eventPublisher.keysPressed.has(event.key)
+      !EventPublisher.instance.keysPressed.has(event.key)
     ) {
       this.direction = this.direction.add(directions[event.key]);
     }
@@ -65,21 +65,23 @@ export class Player extends MovableObject {
   onKeyUp(event) {
     if (
       event.key in directions &&
-      this._eventPublisher.keysPressed.has(event.key)
+      EventPublisher.instance.keysPressed.has(event.key)
     ) {
       this.direction = this.direction.sub(directions[event.key]);
     }
   }
 
   onMouseDown(event) {
-    const rect = this._canvas.rect;
-    const mousePos = new Vector2(
-      event.clientX - rect.left,
-      event.clientY - rect.top,
-    );
-    const direction = mousePos.sub(this.position).normalize();
-    const bullet = new Bullet(this.position, direction);
-    this._eventPublisher.onBulletCreated(bullet);
+    if (Game.instance.isRunning) {
+      const rect = Canvas.instance.rect;
+      const mousePosition = new Vector2(
+        event.clientX - rect.left,
+        event.clientY - rect.top,
+      );
+      const direction = mousePosition.sub(this.position).normalize();
+      const bullet = new Bullet(this.position, direction);
+      EventPublisher.instance.onBulletCreated(bullet);
+    }
   }
 
   onBlur() {
