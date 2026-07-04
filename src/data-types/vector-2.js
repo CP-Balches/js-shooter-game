@@ -13,39 +13,51 @@ export class Vector2 {
   }
 
   get magnitude() {
-    return Math.hypot(this._x, this._y);
+    return Math.hypot(this.x, this.y);
+  }
+
+  static zero() {
+    return this.fromScalar(0);
+  }
+
+  static fromScalar(scalar) {
+    return new Vector2(scalar, scalar);
   }
 
   add(other) {
-    return new Vector2(this._x + other._x, this._y + other._y);
+    return new Vector2(this.x + other.x, this.y + other.y);
   }
 
   sub(other) {
-    return new Vector2(this._x - other._x, this._y - other._y);
+    return new Vector2(this.x - other.x, this.y - other.y);
   }
 
   mult(other) {
-    return new Vector2(this._x * other._x, this._y * other._y);
+    return new Vector2(this.x * other.x, this.y * other.y);
   }
 
   scalarMult(scalar) {
-    return new Vector2(this._x * scalar, this._y * scalar);
+    return new Vector2(this.x * scalar, this.y * scalar);
   }
 
   clamp(min, max) {
     return new Vector2(
-      Math.min(Math.max(this._x, min._x), max._x),
-      Math.min(Math.max(this._y, min._y), max._y),
+      Math.min(Math.max(this.x, min.x), max.x),
+      Math.min(Math.max(this.y, min.y), max.y),
     );
   }
 
   normalize() {
     return this.magnitude === 0
       ? new Vector2(0, 0)
-      : new Vector2(this._x / this.magnitude, this._y / this.magnitude);
+      : new Vector2(this.x / this.magnitude, this.y / this.magnitude);
+  }
+
+  distance(other) {
+    return other.sub(this).magnitude;
   }
 
   toString() {
-    return `(${this._x}, ${this._y})`;
+    return `(${this.x}, ${this.y})`;
   }
 }

@@ -12,8 +12,12 @@ export class Canvas {
     this._eventPublisher = new EventPublisher();
     this._eventPublisher.addSubscriber(this);
 
-    Canvas.instance = this;
+    Canvas._instance = this;
     return this;
+  }
+
+  static get instance() {
+    return Canvas._instance;
   }
 
   get size() {
