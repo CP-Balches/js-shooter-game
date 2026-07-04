@@ -5,6 +5,7 @@ import { Bullet } from "/src/model/bullet.js";
 import { Canvas } from "/src/canvas/canvas.js";
 import { Color } from "/src/data-types/color.js";
 import { Game } from "/src/model/game.js";
+import { HealthBar } from "/src/hud/health-bar.js";
 
 const initialPosition = Canvas.instance.size.scalarMult(0.5);
 const initialDirection = Vector2.zero();
@@ -12,6 +13,8 @@ const radius = 50;
 const speed = 1000;
 const color = new Color(0, 100, 50);
 const maxHealth = 100;
+const healthBarColor = new Color(100, 100, 50);
+const healthBarHeight = 20;
 const directions = {
   w: new Vector2(0, -1),
   a: new Vector2(-1, 0),
@@ -26,7 +29,7 @@ export class Player extends MovableObject {
     }
 
     super(initialPosition, initialDirection, radius, speed, color);
-    this._health = maxHealth;
+    this._healthBar = new HealthBar(maxHealth, healthBarColor, healthBarHeight);
     EventPublisher.instance.addSubscriber(this);
 
     Player._instance = this;
@@ -37,20 +40,35 @@ export class Player extends MovableObject {
     return new Player();
   }
 
+  get healthBar() {
+    return this._healthBar;
+  }
+
   get health() {
-    return this._health;
+    return this.healthBar.health;
   }
 
   set health(value) {
-    this._health = value;
+    this.healthBar.health = value;
   }
 
   update(dt) {
     super.update(dt);
 
     const radiusVector = Vector2.fromScalar(this.radius);
-    const maxPosition = Canvas.instance.size.sub(radiusVector);
+    const maxPosition = Canvas.instance.size.sub(
+      new Vector2(this.radius, this.radius + healthBarHeight),
+    );
     this._position = this.position.clamp(radiusVector, maxPosition);
+  }
+
+  render() {
+    this._color = new Color(
+      this._color.hue,
+      (this.health / maxHealth) * 100,
+      this._color.lightness,
+    );
+    super.render();
   }
 
   onKeyDown(event) {

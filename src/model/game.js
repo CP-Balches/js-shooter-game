@@ -7,6 +7,10 @@ import { EventPublisher } from "/src/events/event-publisher.js";
 import { Color } from "/src/data-types/color.js";
 import { Text } from "/src/hud/text.js";
 
+const mainTextSize = 100;
+const mainTextColor = new Color(0, 0, 100);
+const gameOverColor = new Color(0, 100, 50);
+const playerHealthBarHeight = 20;
 const enemyLimits = {
   minRadius: 10,
   maxRadius: 100,
@@ -28,13 +32,17 @@ export class Game {
     this._lastTimestamp = null;
     this._renderLoop = this._render.bind(this);
     this._isRunning = false;
+    this._isGameOver = false;
     this._nextEnemySpawnTimestamp = 0;
     this._maxEnemySpawnCooldown = 3;
-    this._pauseText = new Text(
-      "PAUSED",
-      Canvas.instance.size.scalarMult(0.5),
-      100,
-      new Color(0, 0, 100),
+
+    const center = Canvas.instance.size.scalarMult(0.5);
+    this._pauseText = new Text("PAUSED", center, mainTextSize, mainTextColor);
+    this._gameOverText = new Text(
+      "GAME OVER",
+      center,
+      mainTextSize,
+      gameOverColor,
     );
 
     Game._instance = this;
@@ -47,6 +55,10 @@ export class Game {
 
   get isRunning() {
     return this._isRunning;
+  }
+
+  get isGameOver() {
+    return this._isGameOver;
   }
 
   start() {
@@ -68,7 +80,7 @@ export class Game {
   }
 
   _render(timestamp) {
-    if (this.isRunning) {
+    if (this.isRunning && !this.isGameOver) {
       this._update(timestamp);
       this._renderObjects();
 
@@ -109,6 +121,9 @@ export class Game {
 
       if (enemy.collidesWith(Player.instance)) {
         Player.instance.health -= enemy.damage;
+        if (Player.instance.health <= 0) {
+          this._isGameOver = true;
+        }
         this._enemies.splice(i, 1);
       } else {
         let j = 0;
@@ -158,9 +173,14 @@ export class Game {
     Player.instance.render();
     this._renderList(this._bullets);
     this._renderList(this._enemies);
+    Player.instance.healthBar.render();
 
     if (!this.isRunning) {
       this._pauseText.render();
+    }
+
+    if (this.isGameOver) {
+      this._gameOverText.render();
     }
   }
 

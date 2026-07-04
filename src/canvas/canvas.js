@@ -46,11 +46,13 @@ export class Canvas {
     this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
   }
 
+  drawRectangle(position, size, color) {
+    this._setColor(color);
+    this._context.fillRect(position.x, position.y, size.x, size.y);
+  }
+
   drawCircle(position, radius, color) {
-    const fillColor = Game.instance.isRunning
-      ? color
-      : new Color(color.hue, 20, color.lightness);
-    this._context.fillStyle = fillColor.toString();
+    this._setColor(color);
     this._context.beginPath();
     this._context.arc(position.x, position.y, radius, 0, 2 * Math.PI);
     this._context.fill();
@@ -75,5 +77,12 @@ export class Canvas {
     document.body.appendChild(canvas);
 
     this._canvas = canvas;
+  }
+
+  _setColor(color) {
+    const fillColor = Game.instance.isRunning
+      ? color
+      : new Color(color.hue, 20, color.lightness);
+    this._context.fillStyle = fillColor.toString();
   }
 }
