@@ -103,6 +103,8 @@ export class Game {
   onPlayerShot(bullet) {
     if (this.status !== GameStatuses.PLAYING) {
       this._updateStatus(GameStatuses.PLAYING);
+      music.currentTime = 0;
+      music.play();
     }
   }
 
@@ -115,8 +117,10 @@ export class Game {
       if (this.status === GameStatuses.PLAYING) {
         this._updateStatus(GameStatuses.PAUSED);
         this._renderObjects();
+        music.pause();
       } else if (this.status === GameStatuses.PAUSED) {
         this._updateStatus(GameStatuses.PLAYING);
+        music.play();
       }
     }
   }
@@ -249,11 +253,6 @@ export class Game {
       this._text.fadeOut(() => this._onTextUpdated(newText));
     } else {
       this._onTextUpdated(newText);
-    }
-
-    if (this.status === GameStatuses.PLAYING) {
-      music.currentTime = 0;
-      music.play();
     }
   }
 
