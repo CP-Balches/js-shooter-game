@@ -105,6 +105,14 @@ export class EventPublisher {
     }
   }
 
+  onEnemyKilled(enemy) {
+    for (const subscriber of this._subscribers) {
+      if (typeof subscriber.onEnemyKilled === "function") {
+        subscriber.onEnemyKilled(enemy);
+      }
+    }
+  }
+
   _keyEventToLowercase(event) {
     return {
       ...event,

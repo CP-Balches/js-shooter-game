@@ -18,6 +18,7 @@ export class Text {
       isYPositionPercentage,
       fadeInTime,
       fadeOutTime,
+      align,
     } = {},
   ) {
     this._text = text;
@@ -32,6 +33,7 @@ export class Text {
     this._fadeOutTime = fadeOutTime ?? defaultFadeTime;
     this._fadeTime = null;
     this._onFaded = null;
+    this._align = align ?? "center";
   }
 
   update(dt) {
@@ -63,7 +65,13 @@ export class Text {
       position.y *= canvasSize.y;
     }
 
-    Canvas.instance.drawText(this._text, this._size, alphaColor, position);
+    Canvas.instance.drawText(
+      this._text,
+      this._size,
+      alphaColor,
+      position,
+      this._align,
+    );
   }
 
   fadeIn(onFadedIn) {

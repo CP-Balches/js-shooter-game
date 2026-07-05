@@ -53,6 +53,7 @@ export class Game {
     this._lastTimestamp = null;
     this._renderLoop = this._render.bind(this);
     this._text = null;
+    this._scoreText = null;
     this._nextEnemySpawnTimestamp = 0;
     this._maxEnemySpawnCooldown = 3;
     this._onTextUpdated = (newText) => {
@@ -140,6 +141,12 @@ export class Game {
       this._text.update(dt);
     }
 
+    this._scoreText = new Text("Score: " + Player.instance.score, {
+      position: new Vector2(20, 30),
+      size: 30,
+      align: "left",
+    });
+
     if (
       this.status === GameStatuses.PLAYING &&
       timestamp >= this._nextEnemySpawnTimestamp
@@ -147,6 +154,14 @@ export class Game {
       this._spawnEnemy();
       this._nextEnemySpawnTimestamp =
         timestamp + Math.random() * this._maxEnemySpawnCooldown * 1000;
+    }
+
+    if (this._maxEnemySpawnCooldown > 0) {
+      this._maxEnemySpawnCooldown -= 0.05 * dt;
+
+      if (this._maxEnemySpawnCooldown < 0) {
+        this._maxEnemySpawnCooldown = 0;
+      }
     }
   }
 
@@ -182,6 +197,7 @@ export class Game {
         if (j < this._bullets.length) {
           this._bullets.splice(j, 1);
           this._enemies.splice(i, 1);
+          EventPublisher.instance.onEnemyKilled(enemy);
         }
       }
     }
@@ -235,6 +251,8 @@ export class Game {
     if (this._text) {
       this._text.render();
     }
+
+    this._scoreText.render();
   }
 
   _renderList(list) {

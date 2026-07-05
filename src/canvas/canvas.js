@@ -62,10 +62,10 @@ export class Canvas {
     this._context.fill();
   }
 
-  drawText(text, size, color, position) {
+  drawText(text, size, color, position, align) {
     this._context.fillStyle = color.toString();
     this._context.font = `${size}px sans-serif`;
-    this._context.textAlign = "center";
+    this._context.textAlign = align ?? "center";
 
     const textHeight = this._context.measureText(text).actualBoundingBoxAscent;
     this._context.fillText(text, position.x, position.y + textHeight / 2);

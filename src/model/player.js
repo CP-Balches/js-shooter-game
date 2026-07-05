@@ -36,6 +36,7 @@ export class Player extends MovableObject {
       healthBarBackgroundColor,
       healthBarHeight,
     );
+    this._score = 0;
     EventPublisher.instance.addSubscriber(this);
 
     Player._instance = this;
@@ -56,6 +57,10 @@ export class Player extends MovableObject {
 
   set health(value) {
     this.healthBar.health = value;
+  }
+
+  get score() {
+    return this._score;
   }
 
   update(dt) {
@@ -111,5 +116,9 @@ export class Player extends MovableObject {
 
   onBlur() {
     this.direction = Vector2.zero();
+  }
+
+  onEnemyKilled(enemy) {
+    this._score++;
   }
 }
