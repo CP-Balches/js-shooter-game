@@ -4,7 +4,7 @@ import { Color } from "/src/data-types/color.js";
 const defaultPosition = Canvas.instance.center;
 const defaultSize = 100;
 const defaultColor = new Color(0, 0, 100);
-const defaultFadeTime = 0.5;
+const defaultFadeTime = 0;
 
 export class Text {
   constructor(
