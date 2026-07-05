@@ -41,6 +41,13 @@ const TextByStatus = Object.freeze({
   GAME_OVER: new Text("GAME OVER", { color: gameOverColor }),
 });
 
+const killSound = new Audio("/assets/hit.mp3");
+killSound.volume = 0.2;
+const gameOverSound = new Audio("/assets/game_over.mp3");
+const music = new Audio("/assets/music.mp3");
+music.volume = 0.4;
+music.loop = true;
+
 export class Game {
   constructor() {
     if (Game._instance) {
@@ -184,6 +191,8 @@ export class Game {
         Player.instance.health -= enemy.damage;
         if (Player.instance.health <= 0) {
           this._updateStatus(GameStatuses.GAME_OVER);
+          gameOverSound.play().then(() => (gameOverSound.currentTime = 0));
+          music.pause();
         }
         this._enemies.splice(i, 1);
       } else {
@@ -198,6 +207,7 @@ export class Game {
           this._bullets.splice(j, 1);
           this._enemies.splice(i, 1);
           EventPublisher.instance.onEnemyKilled(enemy);
+          killSound.play().then(() => (killSound.currentTime = 0));
         }
       }
     }
@@ -237,6 +247,11 @@ export class Game {
       this._text.fadeOut(() => this._onTextUpdated(newText));
     } else {
       this._onTextUpdated(newText);
+    }
+
+    if (this.status === GameStatuses.PLAYING) {
+      music.currentTime = 0;
+      music.play();
     }
   }
 
