@@ -114,7 +114,7 @@ export class Player extends MovableObject {
         event.clientY - rect.top,
       );
       const direction = mousePosition.sub(this.position).normalize();
-      const bullet = new Bullet(this.position, direction);
+      const bullet = new Bullet(this.position, direction, this.color);
 
       EventPublisher.instance.onPlayerShot(bullet);
     }

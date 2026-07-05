@@ -3,11 +3,10 @@ import { Color } from "../data-types/color.js";
 
 const radius = 20;
 const speed = 5000;
-const color = new Color(0, 100, 50);
 const maxLifetime = 2;
 
 export class Bullet extends MovableObject {
-  constructor(position, direction) {
+  constructor(position, direction, color) {
     super(position, direction, radius, speed, color);
     this._lifetime = maxLifetime;
   }
