@@ -8,8 +8,16 @@ export class Vector2 {
     return this._x;
   }
 
+  set x(value) {
+    this._x = value;
+  }
+
   get y() {
     return this._y;
+  }
+
+  set y(value) {
+    this._y = value;
   }
 
   get magnitude() {
@@ -54,12 +62,16 @@ export class Vector2 {
 
   normalize() {
     return this.magnitude === 0
-      ? new Vector2(0, 0)
+      ? Vector2.zero()
       : new Vector2(this.x / this.magnitude, this.y / this.magnitude);
   }
 
   distance(other) {
     return other.sub(this).magnitude;
+  }
+
+  clone() {
+    return new Vector2(this.x, this.y);
   }
 
   toString() {

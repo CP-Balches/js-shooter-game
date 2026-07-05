@@ -81,6 +81,18 @@ export class EventPublisher {
     }
   }
 
+  onPlayerShot(bullet) {
+    for (const subscriber of this._subscribers) {
+      if (typeof subscriber.onPlayerShot === "function") {
+        subscriber.onPlayerShot(bullet);
+      }
+
+      if (typeof subscriber.onBulletCreated === "function") {
+        subscriber.onBulletCreated(bullet);
+      }
+    }
+  }
+
   onBulletCreated(bullet) {
     for (const subscriber of this._subscribers) {
       if (typeof subscriber.onBulletCreated === "function") {

@@ -7,7 +7,7 @@ import { Color } from "/src/data-types/color.js";
 import { Game } from "/src/model/game.js";
 import { HealthBar } from "/src/hud/health-bar.js";
 
-const initialPosition = Canvas.instance.size.scalarMult(0.5);
+const initialPosition = Canvas.instance.center;
 const initialDirection = Vector2.zero();
 const radius = 50;
 const speed = 1000;
@@ -98,11 +98,12 @@ export class Player extends MovableObject {
       );
       const direction = mousePosition.sub(this.position).normalize();
       const bullet = new Bullet(this.position, direction);
-      EventPublisher.instance.onBulletCreated(bullet);
+
+      EventPublisher.instance.onPlayerShot(bullet);
     }
   }
 
   onBlur() {
-    this.direction = new Vector2(0, 0);
+    this.direction = Vector2.zero();
   }
 }

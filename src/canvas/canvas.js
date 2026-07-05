@@ -30,6 +30,10 @@ export class Canvas {
     this._canvas.height = value.y;
   }
 
+  get center() {
+    return this.size.scalarMult(0.5);
+  }
+
   get rect() {
     return this._canvas.getBoundingClientRect();
   }
@@ -58,12 +62,13 @@ export class Canvas {
     this._context.fill();
   }
 
-  drawText(text, position, size, color) {
+  drawText(text, size, color, position) {
     this._context.fillStyle = color.toString();
     this._context.font = `${size}px sans-serif`;
     this._context.textAlign = "center";
-    this._context.textBaseline = "middle";
-    this._context.fillText(text, position.x, position.y);
+
+    const textHeight = this._context.measureText(text).actualBoundingBoxAscent;
+    this._context.fillText(text, position.x, position.y + textHeight / 2);
   }
 
   onResize() {
