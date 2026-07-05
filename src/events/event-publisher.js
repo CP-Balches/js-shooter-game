@@ -42,23 +42,27 @@ export class EventPublisher {
   }
 
   _onKeyDown(event) {
+    const parsedEvent = this._keyEventToLowercase(event);
+
     for (const subscriber of this._subscribers) {
       if (typeof subscriber.onKeyDown === "function") {
-        subscriber.onKeyDown(event);
+        subscriber.onKeyDown(parsedEvent);
       }
     }
 
-    this.keysPressed.add(event.key);
+    this.keysPressed.add(parsedEvent.key);
   }
 
   _onKeyUp(event) {
+    const parsedEvent = this._keyEventToLowercase(event);
+
     for (const subscriber of this._subscribers) {
       if (typeof subscriber.onKeyUp === "function") {
-        subscriber.onKeyUp(event);
+        subscriber.onKeyUp(parsedEvent);
       }
     }
 
-    this.keysPressed.delete(event.key);
+    this.keysPressed.delete(parsedEvent.key);
   }
 
   _onMouseDown(event) {
@@ -99,5 +103,12 @@ export class EventPublisher {
         subscriber.onBulletCreated(bullet);
       }
     }
+  }
+
+  _keyEventToLowercase(event) {
+    return {
+      ...event,
+      key: event.key?.toLowerCase(),
+    };
   }
 }
