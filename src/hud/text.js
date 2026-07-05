@@ -74,16 +74,24 @@ export class Text {
   }
 
   fadeIn(onFadedIn) {
-    this._alpha = 0;
-    this._dalpha = 1;
-    this._fadeTime = this._fadeInTime;
-    this._onFadedIn = onFadedIn ?? null;
+    if (this._fadeInTime === 0) {
+      this._alpha = 1;
+    } else {
+      this._alpha = 0;
+      this._dalpha = 1;
+      this._fadeTime = this._fadeInTime;
+      this._onFadedIn = onFadedIn ?? null;
+    }
   }
 
   fadeOut(onFadedOut) {
-    this._alpha = 1;
-    this._dalpha = -1;
-    this._fadeTime = this._fadeOutTime;
-    this._onFadedOut = onFadedOut ?? null;
+    if (this._fadeOutTime === 0) {
+      this._alpha = 0;
+    } else {
+      this._alpha = 1;
+      this._dalpha = -1;
+      this._fadeTime = this._fadeOutTime;
+      this._onFadedOut = onFadedOut ?? null;
+    }
   }
 }
