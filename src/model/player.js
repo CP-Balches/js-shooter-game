@@ -14,6 +14,7 @@ const speed = 1000;
 const color = new Color(0, 100, 50);
 const maxHealth = 100;
 const healthBarColor = new Color(100, 100, 50);
+const healthBarBackgroundColor = new Color(0, 100, 50);
 const healthBarHeight = 20;
 const directions = {
   w: new Vector2(0, -1),
@@ -29,7 +30,12 @@ export class Player extends MovableObject {
     }
 
     super(initialPosition, initialDirection, radius, speed, color);
-    this._healthBar = new HealthBar(maxHealth, healthBarColor, healthBarHeight);
+    this._healthBar = new HealthBar(
+      maxHealth,
+      healthBarColor,
+      healthBarBackgroundColor,
+      healthBarHeight,
+    );
     EventPublisher.instance.addSubscriber(this);
 
     Player._instance = this;
