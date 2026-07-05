@@ -1,5 +1,5 @@
-import { Canvas } from "/src/canvas/canvas.js";
-import { Vector2 } from "/src/data-types/vector-2.js";
+import { Canvas } from "../canvas/canvas.js";
+import { Vector2 } from "../data-types/vector-2.js";
 
 export class HealthBar {
   constructor(health, color, backgroundColor, height) {

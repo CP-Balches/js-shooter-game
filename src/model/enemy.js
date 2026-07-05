@@ -1,4 +1,4 @@
-import { MovableObject } from "/src/model/movable-object.js";
+import { MovableObject } from "./movable-object.js";
 
 export class Enemy extends MovableObject {
   constructor(position, direction, radius, speed, color, damage) {

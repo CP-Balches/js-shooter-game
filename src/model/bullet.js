@@ -1,5 +1,5 @@
-import { MovableObject } from "/src/model/movable-object.js";
-import { Color } from "/src/data-types/color.js";
+import { MovableObject } from "./movable-object.js";
+import { Color } from "../data-types/color.js";
 
 const radius = 20;
 const speed = 5000;

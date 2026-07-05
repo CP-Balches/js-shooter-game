@@ -1,11 +1,11 @@
-import { Canvas } from "/src/canvas/canvas.js";
-import { Vector2 } from "/src/data-types/vector-2.js";
-import { Player } from "/src/model/player.js";
-import { Bullet } from "/src/model/bullet.js";
-import { Enemy } from "/src/model/enemy.js";
-import { EventPublisher } from "/src/events/event-publisher.js";
-import { Color } from "/src/data-types/color.js";
-import { Text } from "/src/hud/text.js";
+import { Canvas } from "../canvas/canvas.js";
+import { Vector2 } from "../data-types/vector-2.js";
+import { Player } from "./player.js";
+import { Bullet } from "./bullet.js";
+import { Enemy } from "./enemy.js";
+import { EventPublisher } from "../events/event-publisher.js";
+import { Color } from "../data-types/color.js";
+import { Text } from "../hud/text.js";
 
 const gameOverColor = new Color(0, 100, 50);
 const playerHealthBarHeight = 20;

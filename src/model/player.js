@@ -1,11 +1,11 @@
-import { MovableObject } from "/src/model/movable-object.js";
-import { Vector2 } from "/src/data-types/vector-2.js";
-import { EventPublisher } from "/src/events/event-publisher.js";
-import { Bullet } from "/src/model/bullet.js";
-import { Canvas } from "/src/canvas/canvas.js";
-import { Color } from "/src/data-types/color.js";
-import { Game } from "/src/model/game.js";
-import { HealthBar } from "/src/hud/health-bar.js";
+import { MovableObject } from "./movable-object.js";
+import { Vector2 } from "../data-types/vector-2.js";
+import { EventPublisher } from "../events/event-publisher.js";
+import { Bullet } from "./bullet.js";
+import { Canvas } from "../canvas/canvas.js";
+import { Color } from "../data-types/color.js";
+import { Game } from "./game.js";
+import { HealthBar } from "../hud/health-bar.js";
 
 const initialPosition = Canvas.instance.center;
 const initialDirection = Vector2.zero();

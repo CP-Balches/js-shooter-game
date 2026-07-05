@@ -1,7 +1,7 @@
-import { EventPublisher } from "/src/events/event-publisher.js";
-import { Vector2 } from "/src/data-types/vector-2.js";
-import { Game } from "/src/model/game.js";
-import { Color } from "/src/data-types/color.js";
+import { EventPublisher } from "../events/event-publisher.js";
+import { Vector2 } from "../data-types/vector-2.js";
+import { Game } from "../model/game.js";
+import { Color } from "../data-types/color.js";
 
 export class Canvas {
   constructor(size) {

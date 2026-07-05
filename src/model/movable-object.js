@@ -1,4 +1,4 @@
-import { Canvas } from "/src/canvas/canvas.js";
+import { Canvas } from "../canvas/canvas.js";
 
 export class MovableObject {
   constructor(position, direction, radius, speed, color) {

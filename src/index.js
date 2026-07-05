@@ -1,3 +1,3 @@
-import { Game } from "/src/model/game.js";
+import { Game } from "./model/game.js";
 
 Game.instance.start();

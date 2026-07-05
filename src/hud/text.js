@@ -1,6 +1,6 @@
-import { Canvas } from "/src/canvas/canvas.js";
-import { Color } from "/src/data-types/color.js";
-import { Vector2 } from "/src/data-types/vector-2.js";
+import { Canvas } from "../canvas/canvas.js";
+import { Color } from "../data-types/color.js";
+import { Vector2 } from "../data-types/vector-2.js";
 
 const defaultPosition = Vector2.fromScalar(0.5);
 const defaultSize = 100;
