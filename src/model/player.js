@@ -22,7 +22,7 @@ const directions = {
   s: new Vector2(0, 1),
   d: new Vector2(1, 0),
 };
-const hitSound = new Audio("/assets/hit.mp3");
+const hitSound = new Audio("../../assets/hit.mp3");
 hitSound.volume = 0.2;
 
 export class Player extends MovableObject {
