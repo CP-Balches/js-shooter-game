@@ -41,10 +41,12 @@ const TextByStatus = Object.freeze({
   GAME_OVER: new Text("GAME OVER", { color: gameOverColor }),
 });
 
-const killSound = new Audio("../../assets/hit.mp3");
+const killSound = new Audio(new URL("../../assets/hit.mp3", import.meta.url));
 killSound.volume = 0.2;
-const gameOverSound = new Audio("../../assets/game_over.mp3");
-const music = new Audio("../../assets/music.mp3");
+const gameOverSound = new Audio(
+  new URL("../../assets/game_over.mp3", import.meta.url),
+);
+const music = new Audio(new URL("../../assets/music.mp3", import.meta.url));
 music.volume = 0.4;
 music.loop = true;
 
