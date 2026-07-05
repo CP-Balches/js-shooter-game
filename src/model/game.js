@@ -31,6 +31,8 @@ const tutorialTextOptions = {
   position: new Vector2(0.5, 150),
   size: 80,
   isXPositionPercentage: true,
+  fadeInTime: 0.5,
+  fadeOutTime: 0.5,
 };
 const TextByStatus = Object.freeze({
   STARTED: new Text("WASD to move", { ...tutorialTextOptions, fadeInTime: 1 }),
